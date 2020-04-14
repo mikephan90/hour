@@ -42,13 +42,14 @@ function BusinessStack({ navigation }){
 	return (
 		<Stack.Navigator>	
 			<Stack.Screen name="BusinessDetail" component={BusinessDetailScreen}
-			options={{
-				headerLeft: () => (<Button title="Back" onPress={() => navigation.goBack() }/>),
-				title: '',
-				headerShown: true,
-				headerStyle: {
-					backgroundColor: '#a78ce4'
-				}}}
+				options={{
+					headerLeft: () => (<Button title="Back" onPress={() => navigation.goBack() }/>),
+					title: '',
+					headerShown: true,
+					headerStyle: {
+						backgroundColor: '#a78ce4'
+					}}
+				}
 			/>
 		</Stack.Navigator>
 	)
@@ -58,7 +59,16 @@ function AuthStack ({ navigation }){
 	return (
 		<Stack.Navigator>
 			<Stack.Screen name="ResolveAuth" component={ResolveAuthScreen} options={{ headerShown: false }} />
-			<Stack.Screen name="Signin" component={SigninScreen} options={{ headerShown: false }} />
+			<Stack.Screen name="Signin" component={SigninScreen} 
+				options={{
+					headerLeft: () => (<Button title="Back" onPress={() => navigation.navigate('MainStack') }/>),
+					title: '',
+					headerShown: true,
+					headerStyle: {
+						backgroundColor: '#a78ce4'
+					}}
+				}
+			/>
 			<Stack.Screen name="Register" component={RegisterScreen} options={{ headerShown: true }} />
 		</Stack.Navigator>
 	)

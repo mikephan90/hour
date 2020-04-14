@@ -21,7 +21,7 @@ const tryLocalSignin = dispatch => async (navigation) => {
 	const token = await AsyncStorage.getItem('token');
 	if (token) {
 		dispatch({ type: 'signin', payload: { token: token, status: true } });
-		navigation.navigate('Search');
+	navigation.navigate('MainStack');
 	} else {
 		//auto test purpose
 		navigation.navigate('MainStack');
@@ -32,7 +32,7 @@ const clearErrorMessage = dispatch => () => {
 	dispatch({ type: 'clear_error_message' });
 };
 
-const register = dispatch => async ({ email, password }) => {
+const register = dispatch => async ({ navigation, email, password }) => {
 	// make api request to sign up with that email and password
 	//if we sign up, modify our state and say that we are authenticated
 	//if sign up fails we need to reflect error message
@@ -40,7 +40,7 @@ const register = dispatch => async ({ email, password }) => {
 		const response = await hourApi.post('/register', { email, password });
 		await AsyncStorage.setItem('token', response.data.token);
 		dispatch({ type: 'signin', payload: response.data.token });
-		//navigation.navigate('Home');
+		navigation.navigate('Signin');
 	} catch (err) {
 		dispatch({
 			type: 'add_error',
@@ -49,16 +49,15 @@ const register = dispatch => async ({ email, password }) => {
 	}
 };
 
-const signin = dispatch => async ({ email, password }) => {
+const signin = dispatch => async ({ navigation, email, password }) => {
 	// try to sign in
 	//handle success by updatingn state
 	// handle failure by displaying error
 	try {
 		const response = await hourApi.post('/signin', { email, password });
 		await AsyncStorage.setItem('token', response.data.token);
-		console.log(response)
 		dispatch({ type: 'signin', payload: { token: response.data.token, status: true }});
-		//navigation.navigate('Search');
+		navigation.navigate('MainStack');
 	} catch {
 		dispatch({
 			type: 'add_error',

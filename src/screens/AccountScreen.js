@@ -6,7 +6,7 @@ import { Context as AuthContext } from '../context/AuthContext';
 import { SafeAreaView } from 'react-navigation';
 
 const AccountScreen = ({ navigation }) => {
-	const { state: { status }, tryLocalSignin, signout } = useContext(AuthContext);
+	const { state: { status }, signout } = useContext(AuthContext);
 	//console.log("Status: " + status);
 
 	return (

@@ -7,18 +7,18 @@ import { navigate } from '../navigationRef';
 
 const ResolveAuthScreen = ({ navigation }) => {
     const { addLocation } = useContext(LocationContext);
-    const { tryLocalSignin } = useContext(AuthContext);
+    const { state:{ status }, tryLocalSignin } = useContext(AuthContext);
 
 	const callback = useCallback(location => {
 		addLocation(location);
 	}, []);
 
     useLocation(callback);
-    navigation.navigate('MainStack')
+    //navigation.navigate('MainStack')
 
-    // useEffect(() => {
-    //     tryLocalSignin(navigation);
-    // }, []);
+    useEffect(() => {
+        tryLocalSignin(navigation);
+    }, []);
 
     return null;
 };

@@ -12,7 +12,7 @@ const SigninScreen = ({ navigation }) => {
                 headerText="Sign In to Use Tracker"
                 errorMessage={state.errorMessage}
                 submitButtonText="Sign In"
-                onSubmit={({ email, password}) => signin({ email, password })} //can just call signup
+                onSubmit={({ email, password}) => signin({ navigation, email, password })} //can just call signup
             />
             <View>
                 <Text>Don't have an account?</Text>
