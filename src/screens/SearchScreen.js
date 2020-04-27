@@ -6,31 +6,25 @@ import { Feather } from '@expo/vector-icons';
 import useResults from '../hooks/useResults';
 import SearchBar from '../components/SearchBar';
 import ResultsList from '..//components/ResultsList';
+import { navigate } from '../navigationRef';
 
-
-const SearchScreen = ({ navigation }) => {
+const SearchScreen = () => {
 	const [term, setTerm] = useState('');	
 	const [search, setSearch] = useState(true);
 	const [searchApi, results, errorMessage] = useResults();
 
-    const filterResultsByPrice = (price) => {
-        // price === '%' || '$$' || '$$$'
-        return results.filter(result => {
-            return result.price === price;
-        });
-	};
-
+	// Display results 
 	const showSearch = () => {
 		return (
 			<View>
 				<ResultsList 
-					results={filterResultsByPrice('$')}
-					navigation={navigation}
+					results={results}
 				/>
 			</View>
 		)
 	};
 	
+	// Default options quick search options
 	const happyHourTypes = () => {
 		return (
 			<View style={styles.container}>
@@ -60,16 +54,15 @@ const SearchScreen = ({ navigation }) => {
 					<TouchableOpacity 
 						style={styles.iconStyle} 
 						onPress={() => { 
-							navigation.navigate('Home'); 
+							navigate('Home'); 
 							setSearch(true); 
-							setTerm('')}
+							}
 						}
 					>
 						<Feather name="x" style={styles.iconStyle} />
 					</TouchableOpacity>
 
 					<SearchBar 
-						navigation={navigation}
 						term={term} 
 						/*onTermChange={newTerm => setTerm(newTerm)}  */
 						/*onTermSubmit={() => searchApi()} */

@@ -3,8 +3,10 @@ import { StyleSheet } from 'react-native';
 import { Text, Button, Input } from 'react-native-elements';
 import Spacer from './Spacer';
 
-const AuthForm = ({ headerText, errorMessage, onSubmit, submitButtonText }) => {
+const RegistrationForm = ({ headerText, errorMessage, onSubmit, submitButtonText }) => {
     const [username, setUsername] = useState('');
+    const [email, setEmail] = useState('');
+    const [passwordVerify, setPasswordVerify] = useState('');
     const [password, setPassword] = useState('');
     
     return (
@@ -21,6 +23,14 @@ const AuthForm = ({ headerText, errorMessage, onSubmit, submitButtonText }) => {
             />
             <Spacer />
             <Input 
+                label="Email" 
+                value={email} 
+                onChangeText={setEmail}
+                autoCapitalize='none'
+                autoCorrect={false}
+            />
+            <Spacer />
+            <Input 
                 secureTextEntry
                 label="Password" 
                 value={password}
@@ -28,9 +38,17 @@ const AuthForm = ({ headerText, errorMessage, onSubmit, submitButtonText }) => {
                 autoCapitalize='none'
                 autoCorrect={false} 
             />
+            <Input 
+                label="Confirm Password" 
+                value={passwordVerify} 
+                onChangeText={setPasswordVerify}
+                autoCapitalize='none'
+                autoCorrect={false}
+            />
+            <Spacer />
             {errorMessage ? <Text style={styles.errorMessage}>{errorMessage}</Text> : null}
             <Spacer>
-                <Button title={submitButtonText} onPress={() => onSubmit({ username, password })} />
+                <Button title={submitButtonText} onPress={() => onSubmit({ username, email, password })} />
             </Spacer>
         </>
     )
@@ -44,4 +62,4 @@ const styles = StyleSheet.create({
     },
 });
 
-export default AuthForm;
+export default RegistrationForm;

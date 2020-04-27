@@ -1,9 +1,11 @@
 import React, { useContext, useCallback } from 'react';
 import { View, StyleSheet } from 'react-native';
 import { Text, } from 'react-native-elements'
-import { SafeAreaView } from 'react-navigation';
-import { FontAwesome } from '@expo/vector-icons';
+
+// Components
 import Map from '../components/Map';
+import SearchBar from '../components/SearchBar'
+
 import useLocation from '../hooks/useLocation';
 import { Context as LocationContext} from '../context/LocationContext.js';
 
@@ -16,10 +18,13 @@ const MapScreen = () => {
 	const [err] = useLocation(callback);
 
 	return (
-		<SafeAreaView forceInset={{ top: 'always' }}>
+		<View>
 			<Map />
+			<View style={{ position: 'absolute'}}>
+				<SearchBar />
+			</View>
 			{err ? <Text>Please enable location services</Text> : null}
-		</SafeAreaView>
+		</View>
 	);
 };
 

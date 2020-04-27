@@ -1,9 +1,12 @@
 import { AsyncStorage } from 'react-native';
 import createDataContext from './createDataContext';
 import hourApi from '../api/hour';
+import { navigate } from '../navigationRef';
 
 const authReducer = (state, action) => {
 	switch (action.type) {
+		case 'get_user_info':
+			return { ...state, userInfo: action.payload };
 		case 'add_error':
 			return { ...state, errorMessage: action.payload };
 		case 'signin':
@@ -17,30 +20,39 @@ const authReducer = (state, action) => {
 	}
 };
 
-const tryLocalSignin = dispatch => async (navigation) => {
+// Automatically checks user credentials for existing login and automatically logs in
+const tryLocalSignin = dispatch => async () => {
 	const token = await AsyncStorage.getItem('token');
 	if (token) {
 		dispatch({ type: 'signin', payload: { token: token, status: true } });
-	navigation.navigate('MainStack');
+		navigate('MainStack');
 	} else {
 		//auto test purpose
-		navigation.navigate('MainStack');
+		navigate('MainStack');
 	}
 };
+
+// Retrieve user info from server for informational use in application
+const getUserInfo = dispatch => async() => {
+	try {
+		const response = await hourApi.get('/user');
+		dispatch({ type: 'get_user_info', payload: response.data })
+	} catch (err) {
+		console.log("Error retrieving info user. Not signed in.");
+	}
+}
 
 const clearErrorMessage = dispatch => () => {
 	dispatch({ type: 'clear_error_message' });
 };
 
-const register = dispatch => async ({ navigation, email, password }) => {
-	// make api request to sign up with that email and password
-	//if we sign up, modify our state and say that we are authenticated
-	//if sign up fails we need to reflect error message
+// Call register to API server to create a new account and token
+const register = dispatch => async ({ username, email, password }) => {
 	try {
-		const response = await hourApi.post('/register', { email, password });
+		const response = await hourApi.post('/register', { username, email, password });
 		await AsyncStorage.setItem('token', response.data.token);
 		dispatch({ type: 'signin', payload: response.data.token });
-		navigation.navigate('Signin');
+		navigate('Signin');
 	} catch (err) {
 		dispatch({
 			type: 'add_error',
@@ -49,15 +61,14 @@ const register = dispatch => async ({ navigation, email, password }) => {
 	}
 };
 
-const signin = dispatch => async ({ navigation, email, password }) => {
-	// try to sign in
-	//handle success by updatingn state
-	// handle failure by displaying error
+// Call signin to API server and log user in with token
+const signin = dispatch => async ({ username, password }) => {
 	try {
-		const response = await hourApi.post('/signin', { email, password });
+		const response = await hourApi.post('/signin', { username, password });
+		//console.log(response)
 		await AsyncStorage.setItem('token', response.data.token);
 		dispatch({ type: 'signin', payload: { token: response.data.token, status: true }});
-		navigation.navigate('MainStack');
+		navigate('MainStack');
 	} catch {
 		dispatch({
 			type: 'add_error',
@@ -66,14 +77,14 @@ const signin = dispatch => async ({ navigation, email, password }) => {
 	}
 };
 
+// Call signout to API server and log user out
 const signout = dispatch => async (navigation) => {
 	await AsyncStorage.removeItem('token');
 	dispatch({ type: 'signout', payload: false});
-	//navigation.navigate('Home');
 };
 
 export const { Provider, Context } = createDataContext(
 	authReducer,
-	{ tryLocalSignin, clearErrorMessage, register, signin, signout },
-	{ token: null, errorMessage: '', status: null }
+	{ tryLocalSignin, clearErrorMessage, register, signin, signout, getUserInfo },
+	{ token: null, errorMessage: '', status: null, userInfo: null }
 );

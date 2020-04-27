@@ -1,19 +1,27 @@
-import React, { useContext } from 'react';
+import React, { useContext, useEffect } from 'react';
 import { View, StyleSheet } from 'react-native';
-import AuthForm from '../components/AuthForm';
+import RegistrationForm from '../components/RegistrationForm';
 import { Context as AuthContext } from '../context/AuthContext';
 
 const RegisterScreen = ({ navigation }) => {
 	const { state, register, clearErrorMessage } = useContext(AuthContext);
 
+	// Clear error messages with listener on screen focus
+	useEffect(() => {
+        const unsubscribe = navigation.addListener('focus', () => {
+            clearErrorMessage();
+        })
+        return unsubscribe
+    }, [navigation]);
+
+
 	return (
 		<View style={styles.container}>
-			{/* New Auth Form for registration with Username */}
-			<AuthForm
+			<RegistrationForm
 				headerText="Sign Up for Tracker"
 				errorMessage={state.errorMessage}
 				submitButtonText="Sign Up"
-				onSubmit={({ email, password }) => register({ email, password })} //can just call signup
+				onSubmit={({ username, email, password }) => register({ username, email, password })} //can just call signup
 			/>
 		</View>
 	);

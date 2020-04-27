@@ -2,6 +2,9 @@ import React, { useState, useEffect } from 'react';
 import { View, StyleSheet, FlatList, Image, Dimensions, TouchableOpacity } from 'react-native';
 import { Text } from 'react-native-elements';
 import yelp from '../api/yelp';
+import Bookmark from '../components/Bookmark';
+import DisplayReviews from '../components/DisplayReviews';
+import Spacer from '../components/Spacer';
 
 const BusinessDetail = ({ route }) => {
     const [result, setResult] = useState();
@@ -11,8 +14,6 @@ const BusinessDetail = ({ route }) => {
         const response = await yelp.get(`/${id}`);
         setResult(response.data);
     };
-
-    console.log(result);
 
     useEffect(() => {
         getResult(id);
@@ -24,6 +25,7 @@ const BusinessDetail = ({ route }) => {
 
     const displayInfo = () => {
         let link = result.url;
+        const jsonResult = JSON.stringify(result);
         return (
             <View>
                 <Text>{result.location.address1}</Text>
@@ -31,6 +33,7 @@ const BusinessDetail = ({ route }) => {
                 <Text>{result.display_phone}</Text>
                 <Text>Reviews: {result.rating}</Text>
                 <TouchableOpacity><Text>Go to site!</Text></TouchableOpacity>
+                <Bookmark bookmarker={jsonResult}/>
             </View>
         )
     }
@@ -48,8 +51,10 @@ const BusinessDetail = ({ route }) => {
                     }}
                 />
                 { displayInfo() }
-                { !result.his_closed ? <Text>OPEN NOW!</Text> : <Text>CLOSED!</Text>}
-                
+                { !result.is_closed ? <Text>OPEN NOW!</Text> : <Text>CLOSED!</Text>}
+                <Spacer>
+                    { <DisplayReviews /> }
+                </Spacer>
             </View>
     )
 }

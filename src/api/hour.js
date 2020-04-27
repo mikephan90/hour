@@ -2,7 +2,7 @@ import axios from 'axios';
 import { AsyncStorage } from 'react-native';
 
 const instance = axios.create({
-	baseURL: 'https://8d13052d.ngrok.io'
+	baseURL: 'https://510ba924.ngrok.io'
 });
 
 // Get token for auto-login

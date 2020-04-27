@@ -1,51 +1,40 @@
-import React, { useContext } from 'react';
-import { View, StyleSheet, Text, FlatList } from 'react-native';
-import { Button } from 'react-native-elements';
-import Spacer from '../components/Spacer';
-import { Context as AuthContext } from '../context/AuthContext';
+import React, { useContext, useEffect } from 'react';
+import { View, StyleSheet, Text, FlatList, TouchableOpacity} from 'react-native';
 import { SafeAreaView } from 'react-navigation';
+import { Context as AuthContext } from '../context/AuthContext';
+import Spacer from '../components/Spacer';
+import DisplayBookmark from '../components/DisplayBookmarks';
+
+import { BottomNavigation, BottomNavigationItem } from 'material-bread';
 
 // Display empty page or bookmarks
-function bookmarks() {
-	// fill array from user database
-	// call get route via reducer!
-	let bmList = [];
-
-	// display empty page. if bm exist display them
-	if( bmList.length === 0){
-		return (
-			<View>
-				<Text>No bookmarks!</Text>
-				<Text>Look for the (bmIcon) on a place to add it to this list!</Text>
-			</View>
-		)
-	} else {
-		return (
-			<View>
-				<Text>Add Flatlist</Text>
-				<Text>Here to display</Text>
-				<Text>all bookmarks</Text>
-			</View>
-		)
-	}
-};
-
 const BookmarksScreen = () => {
 	const { state: { status } } = useContext(AuthContext);
 
 	return (
-		<SafeAreaView forceInset= {{ top: 'always' }}>
-			<Text style={{ fontSize: 48 }}>Bookmarks</Text>
+		<SafeAreaView forceInset= {{ top: 'always' }} style={styles.container}>
+			<Text style={styles.text}>Bookmarks</Text>
 			<Spacer>
 				{ status 
-					? bookmarks()
+					? (<DisplayBookmark />)
 					: (<Text>You must be signed in to see your bookmarks!</Text>)
 				}
 			</Spacer>
 		</SafeAreaView>
+		
 	);
 };
 
-const styles = StyleSheet.create({});
+const styles = StyleSheet.create({
+	container: {
+		backgroundColor: '#aac8ff',
+		flex: 1,
+	},
+	text: {
+		color: 'white',
+		marginLeft: 15,
+		fontSize: 30,
+	}
+});
 
 export default BookmarksScreen;

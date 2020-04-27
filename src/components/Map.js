@@ -11,8 +11,7 @@ const Map = () => {
 		return <ActivityIndicator size="large" style={{ marginTop: 200 }} />;
 	}
 
-	// console.log(currentLocation.coords);
-
+	// TODO: MARKERS NEARBY HH 
 	return (
 		<View style={styles.container}>
 			<MapView
@@ -37,7 +36,7 @@ const styles = StyleSheet.create({
 		flex: 1,
 	},
 	map: {
-		height: Dimensions.get('window').height - 130,
+		height: Dimensions.get('window').height,
 	},
 });
 

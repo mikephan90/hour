@@ -1,31 +1,45 @@
-import React from 'react';
+import React, { useEffect, useContext } from 'react';
 import { 
     View, 
     Text, 
     StyleSheet, 
     FlatList, 
-    TouchableOpacity 
+    TouchableOpacity,
+    Dimensions,
+    Animated
 } from 'react-native';
-import { withNavigation } from 'react-navigation';
 import FeaturedDetail from './FeaturedDetail';
+import { navigate } from '../navigationRef';
+import useResults from '../hooks/useResults';
+import { Context as LocationContext } from '../context/LocationContext';
+import { ScrollView } from 'react-native-gesture-handler';
 
-const FeaturedList = ({ results, navigation }) => {
+const deviceHeight = Dimensions.get('window').height
+
+const FeaturedList = () => {
+    const { state: { currentLocation } } = useContext(LocationContext);
+    const [searchApi, results] = useResults();
+
+    // Call default search for nearby happy hour locations
+    useEffect(() => {
+		searchApi('');
+	}, [currentLocation]);
 
     if (!results.length) {
         return null;
     }
-    
+
     return (
-        <View style={styles.container}>
+        <View style={{ flex: 1 }}>
             <FlatList
-                horizontal={false}
+                horizontal
                 showsHorizontalScrollIndicator={false}
                 data={results}
                 keyExtractor={(result) => result.id}
                 renderItem={( {item} ) => {
                     return (
                         <TouchableOpacity
-                            onPress={() => navigation.navigate('MainStack', { 
+                            onPress={() => navigate('MainStack', { 
                                 screen: 'Business',
                                 params: {
                                     screen: 'BusinessDetail',
@@ -37,6 +51,13 @@ const FeaturedList = ({ results, navigation }) => {
                         </TouchableOpacity> 
                         )
                 }}
+                scrollEventThrottle={10}
+                pagingEnabled
+                onScroll={
+                    Animated.event(
+                        [{ nativeEvent: { contentOffset: { y: deviceHeight }}}]
+                    )
+                }
             />
         </View>
     );
@@ -44,6 +65,7 @@ const FeaturedList = ({ results, navigation }) => {
 
 const styles = StyleSheet.create({
     titleStyle: {
+        position: 'absolute',
         marginLeft: 15,
         fontSize: 18,
         fontWeight: 'bold',
@@ -54,4 +76,4 @@ const styles = StyleSheet.create({
     }
 });
 
-export default withNavigation(FeaturedList);
+export default FeaturedList;

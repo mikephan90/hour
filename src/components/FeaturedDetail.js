@@ -6,28 +6,40 @@ const ResultsDetail = ({ result }) => {
         <View style={styles.container}>
             <Image style={styles.image} source={{ uri: result.image_url}} />
             <Text style={styles.name}>{result.name}</Text>
-            <Text style={styles.info}>{result.rating} Stars, {result.review_count} Reviews</Text>
+            <Text style={styles.info}>{result.rating} stars</Text>
         </View>
     )
 }
 
 const styles = StyleSheet.create({
     container: {
+        backgroundColor: 'black',
     },
     image: {
+        height: Dimensions.get('window').height,
+        width: Dimensions.get('window').width,
         alignSelf: 'center',
-        width: "90%",
-        height: 300,
         borderRadius: 0,
-        marginBottom: 5
+        opacity: 0.4,
     },
     name: {
-        marginLeft: 20,
+        shadowColor: 'red',
+        color: 'white',
+        position: 'absolute',
+        fontSize: 20,
         fontWeight: 'bold',
+        bottom: 120,
+        right: 30,
+
     },
     info: {
-        marginLeft: 20,
-        marginBottom: 15,
+        shadowColor: 'red',
+        color: 'white',
+        position: 'absolute',
+        fontSize: 15,
+        fontWeight: 'bold',
+        bottom: 100,
+        right: 30,
     }
 });
 

@@ -1,4 +1,4 @@
-import { useEffect, useState, useContext, useCallback } from 'react';
+import { useState, useContext } from 'react';
 import yelp from '../api/yelp';
 import { Context as LocationContext } from '../context/LocationContext';
 
@@ -23,10 +23,6 @@ export default () => {
 			setErrorMessage('Something went wrong');
         }
     };
-
-	useEffect(() => {
-		searchApi('');
-	}, [currentLocation]);
 
 	return [searchApi, results, errorMessage];
 };

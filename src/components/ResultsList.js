@@ -1,15 +1,15 @@
 import React from 'react';
 import { 
     View, 
-    Text, 
+    Text,
     StyleSheet, 
     FlatList, 
     TouchableOpacity 
 } from 'react-native';
-import { withNavigation } from 'react-navigation';
 import ResultsDetail from './ResultsDetail';
+import { navigate } from '../navigationRef';
 
-const ResultsList = ({ results, navigation }) => {
+const ResultsList = ({ results }) => {
     if (!results.length) {
         return null;
     }
@@ -18,11 +18,12 @@ const ResultsList = ({ results, navigation }) => {
         <View style={styles.container}>
             <FlatList
                 data={results}
+                pagingEnabled
                 keyExtractor={(result) => result.id}
                 renderItem={( {item} ) => {
                     return (
                         <TouchableOpacity
-                            onPress={() => navigation.navigate('MainStack', { 
+                            onPress={() => navigate('MainStack', { 
                                 screen: 'Business',
                                 params: {
                                     screen: 'BusinessDetail',
@@ -30,7 +31,7 @@ const ResultsList = ({ results, navigation }) => {
                                 }
                             })}
                         >
-                            <ResultsDetail result={item} navigation={navigation}/>
+                            <ResultsDetail result={item} />
                         </TouchableOpacity> 
                         )
                 }}
@@ -51,4 +52,4 @@ const styles = StyleSheet.create({
     }
 });
 
-export default withNavigation(ResultsList);
+export default ResultsList;

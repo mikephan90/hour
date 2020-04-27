@@ -2,22 +2,19 @@ import React, { useContext, useCallback, useEffect } from 'react';
 import { Context as LocationContext } from '../context/LocationContext';
 import { Context as AuthContext } from '../context/AuthContext';
 import useLocation from '../hooks/useLocation';
-import { navigate } from '../navigationRef';
 
-
-const ResolveAuthScreen = ({ navigation }) => {
+const ResolveAuthScreen = () => {
     const { addLocation } = useContext(LocationContext);
-    const { state:{ status }, tryLocalSignin } = useContext(AuthContext);
+    const { tryLocalSignin, getUserInfo } = useContext(AuthContext);
 
 	const callback = useCallback(location => {
 		addLocation(location);
 	}, []);
-
     useLocation(callback);
-    //navigation.navigate('MainStack')
 
     useEffect(() => {
-        tryLocalSignin(navigation);
+        tryLocalSignin();
+        getUserInfo();
     }, []);
 
     return null;

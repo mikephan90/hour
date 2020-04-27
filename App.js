@@ -1,8 +1,9 @@
 import React from 'react';
-import { createStackNavigator, TransitionSpecs, HeaderStyleInterpolators } from '@react-navigation/stack';
+import { createStackNavigator } from '@react-navigation/stack';
 import { NavigationContainer } from '@react-navigation/native';
 import { createMaterialBottomTabNavigator } from '@react-navigation/material-bottom-tabs';
 import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
+import { navigationRef } from './src/navigationRef';
 
 // Screens
 import MapScreen from './src/screens/MapScreen';
@@ -14,13 +15,15 @@ import ResolveAuthScreen from './src/screens/ResolveAuthScreen';
 import BusinessDetailScreen from './src/screens/BusinessDetailScreen';
 import SigninScreen from './src/screens/SigninScreen';
 import RegisterScreen from './src/screens/RegisterScreen';
+import testScreen from './src/screens/testScreen';
 
 import { Provider as LocationProvider } from './src/context/LocationContext';
 import { Provider as AuthProvider } from './src/context/AuthContext';
-import { Ionicons } from '@expo/vector-icons';
+import { Provider as BookmarkProvider } from './src/context/BookmarkContext';
+import { Ionicons, Feather } from '@expo/vector-icons';
 
 
-import { Button, Text } from 'react-native';
+import { Button, TouchableOpacity, Text } from 'react-native';
 
 
 const Tab = createBottomTabNavigator();
@@ -38,6 +41,39 @@ function SearchStack({ navigation, route }){
 	)
 };
 
+function MapStack() {
+	return (
+		<Stack.Navigator>
+			<Stack.Screen name="MapScreen" 
+				component={MapScreen} 
+				options={{ 
+					headerShown: true,
+					headerTitle: 'Whats Nearby!',
+					headerTitleStyle: {
+						color: 'white',
+						fontSize: 25,
+						fontWeight: 'bold',
+					},
+					headerRight: () => (
+						<TouchableOpacity>
+							<Feather 
+								style={{ marginRight: 10 }}
+								name="filter" 
+								size={20} 
+								color="white" 
+							/>
+						</TouchableOpacity>
+						),
+					headerStyle: {
+						backgroundColor: "#1d1d1d",
+					},
+
+				}} 
+			/>	
+		</Stack.Navigator>
+	)
+}
+
 function BusinessStack({ navigation }){
 	return (
 		<Stack.Navigator>	
@@ -47,7 +83,7 @@ function BusinessStack({ navigation }){
 					title: '',
 					headerShown: true,
 					headerStyle: {
-						backgroundColor: '#a78ce4'
+						backgroundColor: 'black'
 					}}
 				}
 			/>
@@ -81,7 +117,6 @@ const MainTabs = () => {
 			screenOptions={({ route }) => ({
 				tabBarIcon: ({ focused, color, size }) => {
 					let iconName;
-
 					if (route.name === 'Home') {
 						iconName = focused ? 'ios-home' : 'ios-home';
 					} else if (route.name === 'Search') {
@@ -99,13 +134,16 @@ const MainTabs = () => {
 				
 			})}
 			tabBarOptions={{
-				activeTintColor: 'tomato',
+				style: {
+					backgroundColor: '#1d1d1d',
+				},
+				activeTintColor: 'white',
 				inactiveTintColor: 'gray',
 			}}
 
 		>
 			<Tab.Screen name="Search" component={SearchStack} />
-			<Tab.Screen name="Map" component={MapScreen} />
+			<Tab.Screen name="Map" component={MapStack} />
 			<Tab.Screen name="Home" component={HomeScreen} />
 			<Tab.Screen name="Bookmarks" component={BookmarkScreen} />
 			<Tab.Screen name="Account" component={AccountScreen} />
@@ -117,6 +155,7 @@ const MainTabs = () => {
 function MainStack(){
 	return (
 		<Stack.Navigator>
+			{/* <Stack.Screen name="Test" component={testScreen} options={{ headerShown: false}}/> */}
 			<Stack.Screen name="MainTabs" component={MainTabs} options={{ headerShown: false}}/>
 			<Stack.Screen name="Business" component={BusinessStack} options={{ headerShown: false}}/>
 		</Stack.Navigator>
@@ -137,9 +176,11 @@ export default function App() {
 	return (
 		<LocationProvider>
 			<AuthProvider>
-				<NavigationContainer>
-					<AppStack />
-				</NavigationContainer>
+				<BookmarkProvider>
+					<NavigationContainer ref={navigationRef}>
+						<AppStack />
+					</NavigationContainer>
+				</BookmarkProvider>
 			</AuthProvider>
 		</LocationProvider>
 	);
